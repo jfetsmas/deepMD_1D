@@ -13,15 +13,15 @@ import math
 parser = argparse.ArgumentParser(description='Ab-initio MD')
 parser.add_argument('--epoch', type=int, default=200, metavar='N',
                     help='input number of epochs for training (default: 200)')
-parser.add_argument('--input-prefix', type=str, default='KS_MD_scf_3_sigma_0.75', metavar='N',
+parser.add_argument('--input-prefix', type=str, default='KS_MD_scf_8_sigma_1.0', metavar='N',
                     help='prefix of input data filename (default: KS)')
-parser.add_argument('--alpha', type=int, default=256, metavar='N',
+parser.add_argument('--alpha', type=int, default=64, metavar='N',
                     help='input number of channels for training (default: 64)')
 parser.add_argument('--L', type=int, default=7, metavar='N',
                     help='input number of levels (default: 7)')
 parser.add_argument('--n-cnn', type=int, default=6, metavar='N',
                     help='input number layer of CNNs (default: 5)')
-parser.add_argument('--lr', type=float, default=1e-5, metavar='LR',
+parser.add_argument('--lr', type=float, default=1e-3, metavar='LR',
                     help='learning rate (default: 1e-3)')
 parser.add_argument('--batch-size', type=int, default=0, metavar='N',
                     help='batch size (default: 1/100 of the training )')
@@ -31,9 +31,9 @@ parser.add_argument('--restr-size', type=int, default=3, metavar='N',
                     help='number of points in restriction(default: 3)')
 parser.add_argument('--verbose', type=int, default=2, metavar='N',
                     help='verbose (default: 2)')
-parser.add_argument('--n-train', type=int, default=1600, metavar='N',
+parser.add_argument('--n-train', type=int, default=20, metavar='N',
                     help='number of training samples (default 16000')
-parser.add_argument('--n-test', type=int, default=400, metavar='N',
+parser.add_argument('--n-test', type=int, default=5, metavar='N',
                     help='number of test samples (default 4000')
 parser.add_argument('--output-suffix', type=str, default='None', metavar='N',
                     help='suffix output filename(default: )')
@@ -421,6 +421,42 @@ with tf.Session() as sess:
       output("New lowest test cost reached, saving the model ")
       save_path = saver.save(sess, dir__name+"/"+modelsavefolder+"/model.ckpt")
       output("Model saved in path: %s" % save_path)
+
+  saver.restore(sess, dir__name+"/"+modelsavefolder+"/model.ckpt")
+  print("Best Model restored")
+  loss_test = sess.run(cost, feed_dict= {X: xtest[:,0:1],R:xtest[:,1:], Y: ytest})
+  output('Test Loss from best model: %.8e'  % loss_test)
+
+  Rho_out = sess.run(Rho, feed_dict= { X: xtest[:,0:1], R: xtest[:,1:], Y: ytest})
+  E_out = sess.run(Energy, feed_dict= { X: xtest[:,0:1], R: xtest[:,1:], Y: ytest})
+  F_out = sess.run(Forces, feed_dict= { X: xtest[:,0:1], R: xtest[:,1:], Y: ytest})
+
+  Rho_test = ytest[:,Natoms+1:]
+  E_test = ytest[:,0:1]
+  F_test = ytest[:,1:Natoms+1]
+
+  Rho_out_norm = np.sqrt(np.sum(Rho_out**2))
+  Rho_test_norm = np.sqrt(np.sum(Rho_test**2))
+  Rho_test_err = np.sqrt(np.sum((Rho_test-Rho_out)**2))/Rho_test_norm
+
+  E_out_norm = np.sqrt(np.sum(E_out**2))
+  E_test_norm = np.sqrt(np.sum(E_test**2))
+  E_test_err = np.sqrt(np.sum((E_test-E_out)**2))/E_test_norm
+
+  F_out_norm = np.sqrt(np.sum(F_out**2))
+  F_test_norm = np.sqrt(np.sum(F_test**2))
+  F_test_err = np.sqrt(np.sum((F_test-F_out)**2))/F_test_norm
+
+  log_filename = 'Summary_v6_' + args.input_prefix + '.txt'
+  log_os = open(log_filename, "a")
+  log_os.write('%d\t' % Natoms)
+  log_os.write('%d\t%d\t' % (N_epochs, Nsamples))
+  #log_os.write('%d\t%d\t%d\t' % (n_train, n_test, model.count_params()))
+  log_os.write('%d\t' % Nparameters)
+  log_os.write('%.3e\t%.3e\t%.3e\t%.3e\t' % (loss_test, Rho_test_err, E_test_err, F_test_err))
+  log_os.write('\n')
+
+  log_os.close()
 
 
 # possible strategies
