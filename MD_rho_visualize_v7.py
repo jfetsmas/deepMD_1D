@@ -20,7 +20,7 @@ alpha = 64
 n_train = 20
 n_test = 5
 intLength = 80.0
-N_near = 1
+N_near = 7
 
 # this is generic for al the test_files
 dir__name =  os.getcwd()
@@ -55,7 +55,7 @@ Etotal = (Etotal-Etot_mean)
 n_input = InputArray.shape[1]
 Natoms = n_input
 
-Sample_picked = 27
+Sample_picked = 2700
 
 # building the grid for the x data to be fed
 Xpos = (np.array(range(Nx))*intLength/float(Nx))
@@ -258,10 +258,12 @@ with tf.Session() as sess:
   print('Test Loss from best model: %.8e'  % loss_test)
 
   Rho_out = sess.run(Rho, feed_dict= { X: xtest[:,0:1], R: xtest[:,1:], Y: ytest})
+  Rho_picked = np.reshape(RhoT_picked,(Nx,1))
 
-  plt.plot(Xpos_picked, RhoT_picked)
+  plt.plot(Xpos_picked, Rho_picked)
   plt.plot(Xpos_picked, Rho_out,'r--')
-  plt.savefig(input_prefix+'.png', bbox_inches="tight")
+  # plt.plot(Xpos_picked, Rho_out-Rho_picked)
+  plt.savefig(input_prefix+'_Nnear_'+str(N_near)+'.png', bbox_inches="tight")
 
 
 

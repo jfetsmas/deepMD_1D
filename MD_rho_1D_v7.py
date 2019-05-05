@@ -350,7 +350,8 @@ modelsavefolder = models_folder + 'model_'+ script__name + \
                  '_Input_' + args.input_prefix +\
                  '_alpha_' + str(args.alpha) + \
                  '_n_train_' + str(n_train) + \
-                 '_n_test_' + str(n_test) 
+                 '_n_test_' + str(n_test) +\
+                 '_Nnear_' + str(N_near)
 
 
 train_loss = []

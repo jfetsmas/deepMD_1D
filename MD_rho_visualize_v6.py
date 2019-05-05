@@ -14,7 +14,7 @@ import math
 data_folder = 'data/'
 log_folder = 'logs/'
 models_folder = 'models/'  # folder to save the models (weights)
-input_prefix = 'KS_MD_scf_8_sigma_1.0'
+input_prefix = 'KS_MD_scf_8_sigma_6.0'
 script__name = 'MD_rho_1D_v6_py'
 alpha = 64
 n_train = 20
@@ -253,7 +253,7 @@ with tf.Session() as sess:
 
   plt.plot(Xpos_picked, RhoT_picked)
   plt.plot(Xpos_picked, Rho_out,'r--')
-  plt.show()
+  plt.savefig(input_prefix+'v6.png', bbox_inches="tight")
 
 
 
