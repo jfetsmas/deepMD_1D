@@ -1,0 +1,2 @@
+model_checkpoint_path: "/global/scratch/jiefuzhang/deepMD/modelscf_Julia1.1/training/models/model_MD_rho_1D_v6_py_Input_KS_MD_scf_8_sigma_6.0_alpha_64_n_train_3200_n_test_800/model.ckpt"
+all_model_checkpoint_paths: "/global/scratch/jiefuzhang/deepMD/modelscf_Julia1.1/training/models/model_MD_rho_1D_v6_py_Input_KS_MD_scf_8_sigma_6.0_alpha_64_n_train_3200_n_test_800/model.ckpt"

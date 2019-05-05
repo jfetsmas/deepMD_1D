@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/jeffzzzz/Desktop/Determinant/modelscf_Julia1.1/training/models/model_MD_rho_1D_v6_py_Input_KS_MD_scf_8_sigma_1.0_alpha_256_n_train_3200_n_test_800/model.ckpt"
+all_model_checkpoint_paths: "/Users/jeffzzzz/Desktop/Determinant/modelscf_Julia1.1/training/models/model_MD_rho_1D_v6_py_Input_KS_MD_scf_8_sigma_1.0_alpha_256_n_train_3200_n_test_800/model.ckpt"
